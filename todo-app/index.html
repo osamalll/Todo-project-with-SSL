@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تطبيق المهام</title>
+</head>
+<body>
+    <h1>قائمة المهام</h1>
+
+    <!-- نموذج إضافة أو تعديل مهمة -->
+    <form method="POST" action="index.php">
+        <input type="text" name="task" id="taskInput" required>
+        <input type="hidden" name="id" id="taskId">
+        <button type="submit" id="submitButton">إضافة المهمة</button>
+    </form>
+
+    <!-- قائمة المهام -->
+    <ul id="todoList">
+        <!-- عرض المهام من قاعدة البيانات -->
+    </ul>
+
+    <script>
+        // تحميل المهام باستخدام AJAX من index.php
+        fetch('index.php')
+            .then(response => response.json())
+            .then(data => {
+                const todoList = document.getElementById('todoList');
+                data.forEach(todo => {
+                    const listItem = document.createElement('li');
+                    listItem.innerHTML = `
+                        ${todo.task} 
+                        <a href="#" onclick="editTask(${todo.id}, '${todo.task}')">تعديل</a>
+                        <a href="index.php?delete=${todo.id}">حذف</a>
+                    `;
+                    todoList.appendChild(listItem);
+                });
+            });
+
+        function editTask(id, task) {
+            document.getElementById('taskInput').value = task;
+            document.getElementById('taskId').value = id;
+            document.getElementById('submitButton').innerText = 'تعديل المهمة';
+        }
+    </script>
+</body>
+</html>
